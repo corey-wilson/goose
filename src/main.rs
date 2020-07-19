@@ -1,4 +1,3 @@
-use std::fs;
 use std::io::prelude::*;
 use std::net::TcpListener;
 use std::net::TcpStream;
@@ -10,15 +9,14 @@ fn main() {
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();
-        handle_connection(stream);
+        breakdown_request(stream);
     }
 }
 
-fn handle_connection(mut stream: TcpStream) {
+fn breakdown_request(mut stream: TcpStream) {
     // So the buffer could have a bunch of different types,
     // we want to start with just responding to get and post requests
     // and 404ing the others.
-    //
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).unwrap();
 
@@ -27,7 +25,6 @@ fn handle_connection(mut stream: TcpStream) {
         let buf_string = String::from_utf8_lossy(&buffer[..]);
         let buf_split = buf_string.split("\r\n");
         println!("A GET request was made.");
-        // What endpoint did they ask for?
         let mut i = 0;
         for item in buf_split {
             // on the first pass is the HTTP request
@@ -45,6 +42,11 @@ fn handle_connection(mut stream: TcpStream) {
                     }
                     j += 1;
                 }
+            } else if i == 1 {
+                println!("--HEADERS--");
+                println!("{}", item);
+            } else {
+                println!("{}", item);
             }
             i += 1;
         }
