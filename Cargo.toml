@@ -1,5 +1,5 @@
 [package]
-name = "arena_assist"
+name = "goose"
 version = "0.1.0"
 authors = ["corey <wilso.core@gmail.com>"]
 edition = "2018"
