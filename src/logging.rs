@@ -2,10 +2,8 @@ use std::io::prelude::*;
 use std::net::TcpStream;
 
 pub fn print_request_info(mut stream: TcpStream) {
-    // So the buffer could have a bunch of different types,
-    // we want to start with just responding to get and post requests
-    // and 404ing the others.
-    println!("JUST DO IT");
+    // some janky request printer to break down the http request
+
     let mut buffer = [0; 1024];
     stream.read(&mut buffer).unwrap();
 
@@ -14,7 +12,7 @@ pub fn print_request_info(mut stream: TcpStream) {
         let buf_string = String::from_utf8_lossy(&buffer[..]);
         print_get_request(&buf_string);
     }
-    // TODO: add other request types?
+    // TODO: add other request types (prob make it generic)?
 }
 
 fn print_get_request(request_string: &str) {
@@ -23,7 +21,7 @@ fn print_get_request(request_string: &str) {
     let mut i = 0;
     for item in buf_split {
         // on the first line is the HTTP request
-        // on the second line (and after) we list the headers
+        // on the second line (and after) we have headers
         if i == 0 {
             print_get_request_line(&item);
         } else if i == 1 {
